@@ -26,14 +26,12 @@ echo.
 echo [*] Pushing branch 'main' to origin...
 git push -u origin main
 
-if errorlevel 1 (
-    echo.
-    echo [!] Push failed or authentication was cancelled.
-    echo [*] If the remote repository already has commits (like a README), try:
-    echo     git push -u origin main --force
-) else (
+if %ERRORLEVEL% EQU 0 (
     echo.
     echo [+] Successfully pushed to https://github.com/royalreddy143y-gif/quantum-care !
+) else (
+    echo.
+    echo [!] Push encountered an issue.
 )
 
 echo.

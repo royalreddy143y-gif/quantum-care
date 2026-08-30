@@ -126,8 +126,8 @@ def run_hybrid_inference(
         classical_feat_list = classical_4d.squeeze(0).tolist()
         quantum_feat_list = quantum_exp.squeeze(0).tolist()
 
-    display_mode = "Hybrid Quantum-Classical Model"
-    if active_mode.lower() == "demo" or True:
+    display_mode = f"Hybrid Quantum-Classical ({active_mode.capitalize()} Mode)"
+    if active_mode.lower() == "demo":
         with open(image_path, "rb") as f:
             file_hash = int(hashlib.md5(f.read()).hexdigest()[:8], 16)
 

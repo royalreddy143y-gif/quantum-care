@@ -97,7 +97,7 @@ if os.path.exists(FRONTEND_DIST_DIR) and os.path.exists(os.path.join(FRONTEND_DI
             return FileResponse(file_path)
         return FileResponse(os.path.join(FRONTEND_DIST_DIR, "index.html"))
 else:
-    @app.get("/")
+    @app.api_route("/", methods=["GET", "HEAD"])
     def root():
         return {
             "name": "QuantumCare API",
@@ -107,5 +107,3 @@ else:
             "ping": "/ping",
             "api_health": f"{settings.API_V1_STR}/health"
         }
-
-

@@ -8,9 +8,14 @@ from app.database.session import engine, Base
 # Import all models to ensure metadata registration
 import app.models
 from app.api import auth, patients, upload, analyses, predict, reports, health
+from app.utils.seed_data import seed_demo_data
 
-# Ensure DB tables exist on startup
+# Ensure DB tables exist and demo data is seeded on startup
 Base.metadata.create_all(bind=engine)
+try:
+    seed_demo_data()
+except Exception as e:
+    print(f"[*] Seed data initialization notice: {e}")
 
 app = FastAPI(
     title="QuantumCare API",

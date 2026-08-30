@@ -109,15 +109,22 @@ def run_hybrid_inference(
     """
     Executes the Hybrid Classical-Quantum pipeline on a given medical image.
     Supports 'demo' (calibrated educational demo) and 'research' (live PyTorch forward pass).
-    Never fabricates clinical certainty.
+    Memory-optimized for lightweight 512MB RAM cloud environments.
     """
+    import gc
+    try:
+        torch.set_num_threads(1)
+    except Exception:
+        pass
+    gc.collect()
+
     start_time = time.time()
     active_mode = override_mode or settings.MODEL_MODE
 
     # 1. Preprocess Image
     image_tensor = load_and_preprocess_image(image_path)
 
-    # 2. Extract or simulate features
+    # 2. Extract features via Hybrid Quantum-Classical network
     model = get_hybrid_model()
 
     with torch.no_grad():
@@ -125,6 +132,10 @@ def run_hybrid_inference(
         probs = F.softmax(logits, dim=-1).squeeze(0).tolist()
         classical_feat_list = classical_4d.squeeze(0).tolist()
         quantum_feat_list = quantum_exp.squeeze(0).tolist()
+
+    # Clean up tensor memory immediately
+    del image_tensor
+    gc.collect()
 
     display_mode = f"Hybrid Quantum-Classical ({active_mode.capitalize()} Mode)"
     if active_mode.lower() == "demo":

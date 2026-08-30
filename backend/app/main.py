@@ -47,11 +47,39 @@ app.include_router(predict.router, prefix=settings.API_V1_STR)
 app.include_router(reports.router, prefix=settings.API_V1_STR)
 
 
-@app.get("/")
-def root():
-    return {
-        "name": "QuantumCare API",
-        "tagline": "Quantum Intelligence for Early Disease Detection",
-        "documentation": "/docs",
-        "health": f"{settings.API_V1_STR}/health"
-    }
+from fastapi.responses import FileResponse
+
+# Check for frontend build directory (Single-Service Full-Stack Deployment)
+FRONTEND_DIST_DIR = os.path.abspath(
+    os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "frontend", "dist")
+)
+
+if os.path.exists(FRONTEND_DIST_DIR) and os.path.exists(os.path.join(FRONTEND_DIST_DIR, "index.html")):
+    assets_dir = os.path.join(FRONTEND_DIST_DIR, "assets")
+    if os.path.exists(assets_dir):
+        app.mount("/assets", StaticFiles(directory=assets_dir), name="assets")
+
+    @app.get("/")
+    async def serve_index():
+        return FileResponse(os.path.join(FRONTEND_DIST_DIR, "index.html"))
+
+    @app.get("/{full_path:path}")
+    async def serve_spa(full_path: str):
+        # Allow standard API / docs routes to be handled by FastAPI
+        if full_path.startswith("api") or full_path.startswith("docs") or full_path.startswith("redoc") or full_path.startswith("openapi.json"):
+            from fastapi import HTTPException
+            raise HTTPException(status_code=404, detail="Not Found")
+        file_path = os.path.join(FRONTEND_DIST_DIR, full_path)
+        if os.path.exists(file_path) and os.path.isfile(file_path):
+            return FileResponse(file_path)
+        return FileResponse(os.path.join(FRONTEND_DIST_DIR, "index.html"))
+else:
+    @app.get("/")
+    def root():
+        return {
+            "name": "QuantumCare API",
+            "tagline": "Quantum Intelligence for Early Disease Detection",
+            "documentation": "/docs",
+            "health": f"{settings.API_V1_STR}/health"
+        }
+

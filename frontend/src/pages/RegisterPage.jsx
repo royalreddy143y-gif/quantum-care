@@ -30,13 +30,18 @@ export const RegisterPage = () => {
 
     setLoading(true);
     try {
+      const emailClean = formData.email.trim().toLowerCase();
       await register({
-        full_name: formData.full_name,
-        email: formData.email,
+        full_name: formData.full_name.trim(),
+        email: emailClean,
         password: formData.password
       });
+      // Store credentials locally for seamless login
+      localStorage.setItem('quantumcare_saved_email', emailClean);
+      localStorage.setItem('quantumcare_saved_password', formData.password);
+      
       // Automatically authenticate after registration
-      await login(formData.email, formData.password);
+      await login(emailClean, formData.password);
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.detail || 'Failed to create account.');

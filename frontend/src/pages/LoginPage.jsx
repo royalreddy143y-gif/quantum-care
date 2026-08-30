@@ -1,26 +1,62 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Cpu, Lock, Mail, ArrowRight, AlertCircle } from 'lucide-react';
+import { Cpu, Lock, Mail, ArrowRight, AlertCircle, CheckCircle2, Sparkles } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/Button';
 
 export const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(true);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
+  // Preload saved credentials from localStorage
+  useEffect(() => {
+    const savedEmail = localStorage.getItem('quantumcare_saved_email');
+    const savedPassword = localStorage.getItem('quantumcare_saved_password');
+    if (savedEmail) {
+      setEmail(savedEmail);
+    }
+    if (savedPassword) {
+      setPassword(savedPassword);
+    }
+  }, []);
+
+  const handleFillDemo = () => {
+    setEmail('demo@quantumcare.org');
+    setPassword('QuantumCare2025!');
+    setError('');
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    const emailClean = email.trim().toLowerCase();
+    
+    if (!emailClean || !password) {
+      setError('Please enter your email and password.');
+      return;
+    }
+
     setLoading(true);
     try {
-      await login(email, password);
+      await login(emailClean, password);
+      
+      // Store credentials if remember me is enabled
+      if (rememberMe) {
+        localStorage.setItem('quantumcare_saved_email', emailClean);
+        localStorage.setItem('quantumcare_saved_password', password);
+      } else {
+        localStorage.removeItem('quantumcare_saved_email');
+        localStorage.removeItem('quantumcare_saved_password');
+      }
+
       navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.detail || 'Invalid email or password credentials.');
+      setError(err.response?.data?.detail || 'Incorrect email or password. Please verify your credentials or use the demo account.');
     } finally {
       setLoading(false);
     }
@@ -37,12 +73,28 @@ export const LoginPage = () => {
         </Link>
         <h2 className="text-2xl font-bold text-slate-900">Sign In</h2>
         <p className="mt-1 text-xs text-slate-500">
-          Enter your credentials to access your account
+          Enter your credentials to access the quantum diagnostic suite
         </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md px-4">
         <div className="bg-white py-8 px-6 shadow-xl shadow-slate-200/50 rounded-2xl border border-slate-100 sm:px-10 space-y-6">
+          
+          {/* Quick Demo Fill Banner */}
+          <div className="p-3 bg-brand-50 border border-brand-200/60 rounded-xl flex items-center justify-between text-brand-900 text-xs">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-brand-600 flex-shrink-0" />
+              <span>Testing the platform?</span>
+            </div>
+            <button
+              type="button"
+              onClick={handleFillDemo}
+              className="px-2.5 py-1 text-xs font-semibold bg-brand-600 hover:bg-brand-700 text-white rounded-lg transition-colors shadow-sm"
+            >
+              Fill Demo Login
+            </button>
+          </div>
+
           {error && (
             <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl flex items-center gap-2 text-rose-800 text-xs font-medium">
               <AlertCircle className="w-4 h-4 flex-shrink-0 text-rose-600" />
@@ -85,9 +137,21 @@ export const LoginPage = () => {
               </div>
             </div>
 
+            <div className="flex items-center justify-between text-xs">
+              <label className="flex items-center gap-2 cursor-pointer text-slate-600 select-none">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="w-4 h-4 rounded text-brand-600 focus:ring-brand-500 border-slate-300"
+                />
+                <span>Remember my credentials</span>
+              </label>
+            </div>
+
             <Button
               type="submit"
-              variant="primary"
+              variant="quantum"
               size="lg"
               className="w-full"
               isLoading={loading}

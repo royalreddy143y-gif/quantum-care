@@ -7,7 +7,7 @@ services:
     runtime: python
     plan: free
     region: oregon
-    buildCommand: "pip install -r backend/requirements.txt"
+    buildCommand: "pip install --no-cache-dir torch torchvision --index-url https://download.pytorch.org/whl/cpu && pip install --no-cache-dir -r backend/requirements.txt"
     startCommand: "python run.py"
     healthCheckPath: /health
     envVars:
@@ -19,6 +19,10 @@ services:
         value: demo
       - key: PORT
         value: 10000
+      - key: WEB_CONCURRENCY
+        value: 1
+      - key: MALLOC_ARENA_MAX
+        value: 2
       - key: SECRET_KEY
         generateValue: true
       - key: CORS_ORIGINS

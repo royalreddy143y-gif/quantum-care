@@ -1,0 +1,2 @@
+# QuantumCare - Master Python Dependencies
+-r backend/requirements.txt

@@ -1,0 +1,23 @@
+{
+  "venvPath": "backend",
+  "venv": ".venv",
+  "extraPaths": [
+    "backend",
+    "backend/.venv/Lib/site-packages",
+    "."
+  ],
+  "include": [
+    "backend",
+    "ml_model",
+    "quantum_ml"
+  ],
+  "exclude": [
+    "**/node_modules",
+    "**/__pycache__",
+    "backend/.venv"
+  ],
+  "reportMissingImports": true,
+  "reportMissingTypeStubs": false,
+  "pythonVersion": "3.11",
+  "pythonPlatform": "Windows"
+}

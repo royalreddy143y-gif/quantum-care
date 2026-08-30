@@ -1,0 +1,32 @@
+[tool.pyrefly]
+python-interpreter-path = "E:\\QuantumCare\\backend\\.venv\\Scripts\\python.exe"
+site-package-path = [
+    "E:\\QuantumCare\\backend\\.venv\\Lib\\site-packages"
+]
+search-path = [
+    "E:\\QuantumCare\\backend",
+    "E:\\QuantumCare",
+    "E:\\QuantumCare\\ml_model",
+    "E:\\QuantumCare\\quantum_ml"
+]
+
+[tool.pyright]
+venvPath = "backend"
+venv = ".venv"
+extraPaths = [
+    "backend",
+    "backend/.venv/Lib/site-packages",
+    "."
+]
+include = [
+    "backend",
+    "ml_model",
+    "quantum_ml"
+]
+exclude = [
+    "**/node_modules",
+    "**/__pycache__",
+    "backend/.venv"
+]
+pythonVersion = "3.11"
+pythonPlatform = "Windows"

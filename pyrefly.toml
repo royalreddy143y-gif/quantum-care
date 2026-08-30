@@ -1,0 +1,18 @@
+python-interpreter-path = "E:\\QuantumCare\\backend\\.venv\\Scripts\\python.exe"
+
+site-package-path = [
+    "E:\\QuantumCare\\backend\\.venv\\Lib\\site-packages"
+]
+
+search-path = [
+    "E:\\QuantumCare\\backend",
+    "E:\\QuantumCare",
+    "E:\\QuantumCare\\ml_model",
+    "E:\\QuantumCare\\quantum_ml"
+]
+
+project-includes = [
+    "backend",
+    "ml_model",
+    "quantum_ml"
+]

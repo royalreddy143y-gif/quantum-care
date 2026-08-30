@@ -39,3 +39,24 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     user_id: Optional[int] = None
+
+
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+
+
+class ResetPasswordRequest(BaseModel):
+    email: EmailStr
+    reset_code: str = Field(..., min_length=4)
+    new_password: str = Field(..., min_length=6)
+
+
+class ProfileUpdateRequest(BaseModel):
+    full_name: Optional[str] = Field(None, min_length=2)
+    email: Optional[EmailStr] = None
+    institution: Optional[str] = None
+
+
+class ChangePasswordRequest(BaseModel):
+    current_password: str
+    new_password: str = Field(..., min_length=6)

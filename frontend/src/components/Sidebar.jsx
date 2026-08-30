@@ -5,6 +5,7 @@ import {
   PlusCircle,
   Users,
   History,
+  Settings,
   Cpu,
   LogOut
 } from 'lucide-react';
@@ -20,6 +21,7 @@ export const Sidebar = () => {
     { label: 'New Analysis', path: '/analyses/new', icon: PlusCircle },
     { label: 'Patients', path: '/patients', icon: Users },
     { label: 'Analyses History', path: '/history', icon: History },
+    { label: 'Settings', path: '/settings', icon: Settings },
   ];
 
   const handleLogout = async () => {
@@ -79,24 +81,28 @@ export const Sidebar = () => {
           </p>
         </div>
 
-        {/* User Card */}
+        {/* User Card linking to Settings */}
         <div className="flex items-center justify-between px-2">
-          <div className="flex items-center gap-2.5 overflow-hidden">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-brand-500 to-purple-500 text-white flex items-center justify-center font-bold text-xs">
+          <Link
+            to="/settings"
+            className="flex items-center gap-2.5 overflow-hidden flex-1 group hover:opacity-80 transition-opacity"
+            title="Open Account Settings"
+          >
+            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-brand-500 to-purple-500 text-white flex items-center justify-center font-bold text-xs shadow-xs">
               {user?.full_name?.charAt(0) || 'U'}
             </div>
             <div className="truncate">
-              <p className="text-xs font-semibold text-slate-900 truncate">
+              <p className="text-xs font-semibold text-slate-900 truncate group-hover:text-brand-600 transition-colors">
                 {user?.full_name || 'User'}
               </p>
               <p className="text-[10px] text-slate-500 truncate">
                 {user?.email || 'Authenticated'}
               </p>
             </div>
-          </div>
+          </Link>
           <button
             onClick={handleLogout}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors ml-1"
             title="Sign Out"
           >
             <LogOut className="w-4 h-4" />

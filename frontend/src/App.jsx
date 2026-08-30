@@ -6,6 +6,7 @@ import { DashboardLayout } from './layouts/DashboardLayout';
 import { LandingPage } from './pages/LandingPage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
+import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { PatientsPage } from './pages/PatientsPage';
 import { PatientDetailPage } from './pages/PatientDetailPage';
@@ -14,6 +15,7 @@ import { AnalysisProcessPage } from './pages/AnalysisProcessPage';
 import { ResultPage } from './pages/ResultPage';
 import { HistoryPage } from './pages/HistoryPage';
 import { ReportViewPage } from './pages/ReportViewPage';
+import { SettingsPage } from './pages/SettingsPage';
 
 export function App() {
   return (
@@ -23,6 +25,7 @@ export function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
         {/* Authenticated Portal */}
         <Route element={<DashboardLayout />}>
@@ -34,6 +37,7 @@ export function App() {
           <Route path="/analyses/:id/result" element={<ResultPage />} />
           <Route path="/analyses/:id/report" element={<ReportViewPage />} />
           <Route path="/history" element={<HistoryPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
         </Route>
 
         {/* Fallback */}

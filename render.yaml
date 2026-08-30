@@ -23,6 +23,10 @@ services:
         generateValue: true
       - key: CORS_ORIGINS
         value: "*"
+      - key: MONGODB_DB_NAME
+        value: "quantumcare"
+      - key: MONGODB_URI
+        sync: false
 
   # ============================================================================
   # 2. QuantumCare Frontend Web App (React + Vite Static Site)

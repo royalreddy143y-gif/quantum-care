@@ -79,4 +79,34 @@ def trigger_prediction(
     db.commit()
     db.refresh(analysis)
 
+    # Sync complete diagnostic document to MongoDB Atlas
+    from app.database.mongodb import mongo_save_analysis_record
+    try:
+        mongo_save_analysis_record(
+            analysis_data={
+                "id": analysis.id,
+                "analysis_code": analysis.analysis_code,
+                "patient_id": patient.patient_id,
+                "patient_name": patient.name,
+                "patient_age": patient.age,
+                "patient_gender": patient.gender,
+                "target_condition": analysis.target_condition,
+                "model_mode": analysis.model_mode,
+                "status": analysis.status,
+                "created_at": analysis.created_at.isoformat() if analysis.created_at else None
+            },
+            prediction_data={
+                "prediction_label": prediction.prediction_label,
+                "confidence_score": prediction.confidence_score,
+                "risk_category": prediction.risk_category,
+                "classical_features": prediction.classical_features,
+                "quantum_features": prediction.quantum_features,
+                "fusion_weights": prediction.fusion_weights,
+                "explanation": prediction.explanation,
+                "processing_time_ms": prediction.processing_time_ms
+            }
+        )
+    except Exception as ex:
+        print(f"[*] MongoDB sync notice: {ex}")
+
     return analysis

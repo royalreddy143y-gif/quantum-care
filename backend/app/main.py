@@ -9,6 +9,7 @@ from app.database.session import engine, Base
 import app.models
 from app.api import auth, patients, upload, analyses, predict, reports, health
 from app.utils.seed_data import seed_demo_data
+from app.database.mongodb import init_mongo_indexes
 
 # Ensure DB tables exist and demo data is seeded on startup if configured
 Base.metadata.create_all(bind=engine)
@@ -17,6 +18,12 @@ if settings.SEED_DEMO_DATA:
         seed_demo_data()
     except Exception as e:
         print(f"[*] Seed data initialization notice: {e}")
+
+# Initialize MongoDB Atlas indexes if configured
+try:
+    init_mongo_indexes()
+except Exception as e:
+    print(f"[*] MongoDB Atlas initialization notice: {e}")
 
 app = FastAPI(
     title="QuantumCare API",

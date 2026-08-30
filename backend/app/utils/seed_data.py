@@ -53,6 +53,43 @@ def seed_demo_data():
             db.add_all([patient_1, patient_2])
             db.commit()
             print("Successfully seeded demo researcher and sample patients.")
+
+            # Sync to MongoDB Atlas
+            from app.database.mongodb import mongo_upsert_user, mongo_save_patient
+            try:
+                mongo_upsert_user({
+                    "id": demo_user.id,
+                    "email": demo_user.email,
+                    "full_name": demo_user.full_name,
+                    "role": demo_user.role,
+                    "institution": demo_user.institution,
+                    "is_active": demo_user.is_active,
+                    "created_at": demo_user.created_at.isoformat() if demo_user.created_at else None
+                })
+                mongo_save_patient({
+                    "id": patient_1.id,
+                    "patient_id": patient_1.patient_id,
+                    "name": patient_1.name,
+                    "age": patient_1.age,
+                    "gender": patient_1.gender,
+                    "symptoms": patient_1.symptoms,
+                    "medical_history": patient_1.medical_history,
+                    "biomarkers": patient_1.biomarkers,
+                    "genomics": patient_1.genomics
+                })
+                mongo_save_patient({
+                    "id": patient_2.id,
+                    "patient_id": patient_2.patient_id,
+                    "name": patient_2.name,
+                    "age": patient_2.age,
+                    "gender": patient_2.gender,
+                    "symptoms": patient_2.symptoms,
+                    "medical_history": patient_2.medical_history,
+                    "biomarkers": patient_2.biomarkers,
+                    "genomics": patient_2.genomics
+                })
+            except Exception as ex:
+                print(f"[*] MongoDB demo data sync notice: {ex}")
     finally:
         db.close()
 

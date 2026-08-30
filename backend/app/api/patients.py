@@ -40,6 +40,26 @@ def create_patient(
     db.add(patient)
     db.commit()
     db.refresh(patient)
+
+    # Sync patient document to MongoDB Atlas
+    from app.database.mongodb import mongo_save_patient
+    try:
+        mongo_save_patient({
+            "id": patient.id,
+            "patient_id": patient.patient_id,
+            "user_id": patient.user_id,
+            "name": patient.name,
+            "age": patient.age,
+            "gender": patient.gender,
+            "symptoms": patient.symptoms,
+            "medical_history": patient.medical_history,
+            "biomarkers": patient.biomarkers,
+            "genomics": patient.genomics,
+            "created_at": patient.created_at.isoformat() if patient.created_at else None
+        })
+    except Exception as ex:
+        print(f"[*] MongoDB patient sync notice: {ex}")
+
     return patient
 
 

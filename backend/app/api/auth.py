@@ -31,6 +31,22 @@ def register_user(user_in: UserCreate, db: Session = Depends(get_db)):
     db.add(user)
     db.commit()
     db.refresh(user)
+
+    # Sync user document to MongoDB Atlas
+    from app.database.mongodb import mongo_upsert_user
+    try:
+        mongo_upsert_user({
+            "id": user.id,
+            "email": user.email,
+            "full_name": user.full_name,
+            "role": user.role,
+            "institution": user.institution,
+            "is_active": user.is_active,
+            "created_at": user.created_at.isoformat() if user.created_at else None
+        })
+    except Exception as ex:
+        print(f"[*] MongoDB user sync notice: {ex}")
+
     return user
 
 

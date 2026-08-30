@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     HOST: str = "0.0.0.0"
     PORT: int = 8000
 
-    # Database
+    # SQL Database
     DATABASE_URL: str = "sqlite:///./quantumcare.db"
 
     @field_validator("DATABASE_URL", mode="before")
@@ -24,6 +24,11 @@ class Settings(BaseSettings):
         if v.startswith("postgres://"):
             return v.replace("postgres://", "postgresql://", 1)
         return v
+
+    # MongoDB Atlas Database
+    MONGODB_URI: Union[str, None] = None
+    MONGODB_DB_NAME: str = "quantumcare"
+    USE_MONGODB: bool = True
 
     # Security
     SECRET_KEY: str = "supersecretkey_change_in_production_min_32_bytes_long_12345"

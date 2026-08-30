@@ -7,6 +7,7 @@ import pennylane as qml
 
 from app.core.config import settings
 from app.database.session import engine
+from app.database.mongodb import check_mongo_health
 
 router = APIRouter(tags=["Health & Monitoring"])
 
@@ -47,6 +48,7 @@ def health_check():
     """
     uptime_seconds = round((datetime.now(timezone.utc) - START_TIME).total_seconds(), 2)
     db_health = check_database_health()
+    mongo_health = check_mongo_health()
     
     return {
         "status": "online",
@@ -56,6 +58,8 @@ def health_check():
         "uptime_seconds": uptime_seconds,
         "database": db_health["status"],
         "database_connected": db_health["connected"],
+        "mongodb": mongo_health["status"],
+        "mongodb_connected": mongo_health["connected"],
         "engine": "Hybrid Quantum-Classical Pipeline",
         "model_mode": settings.MODEL_MODE,
         "pytorch_version": torch.__version__,

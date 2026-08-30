@@ -6,8 +6,14 @@ from sqlalchemy.orm import sessionmaker
 from app.main import app
 from app.database.session import Base, get_db
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./test_temp.db"
-engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
+from sqlalchemy.pool import StaticPool
+
+SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL,
+    connect_args={"check_same_thread": False},
+    poolclass=StaticPool
+)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 

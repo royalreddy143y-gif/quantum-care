@@ -6,8 +6,9 @@ echo   Remote: https://github.com/royalreddy143y-gif/quantum-care
 echo =======================================================
 echo.
 
-set "PATH=C:\Users\HP\AppData\Local\Programs\Git\cmd;C:\Program Files\Git\cmd;%PATH%"
-
+if defined LOCALAPPDATA (
+    set "PATH=%LOCALAPPDATA%\Programs\Git\cmd;%ProgramFiles%\Git\cmd;%ProgramFiles(x86)%\Git\cmd;%PATH%"
+)
 cd /d "%~dp0"
 
 echo [*] Verifying Git...
@@ -26,12 +27,14 @@ echo.
 echo [*] Pushing branch 'main' to origin...
 git push -u origin main
 
-if %ERRORLEVEL% EQU 0 (
+if errorlevel 1 (
     echo.
-    echo [+] Successfully pushed to https://github.com/royalreddy143y-gif/quantum-care !
+    echo [!] Push failed or authentication was cancelled.
+    echo [*] If the remote repository already has commits (like a README), try:
+    echo     git push -u origin main --force
 ) else (
     echo.
-    echo [!] Push encountered an issue.
+    echo [+] Successfully pushed to https://github.com/royalreddy143y-gif/quantum-care !
 )
 
 echo.

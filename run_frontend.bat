@@ -5,25 +5,28 @@ echo   QuantumCare - Starting React + Vite Frontend
 echo ===================================================
 echo.
 
-set PATH=C:\Program Files\nodejs;%PATH%
+if defined ProgramFiles (
+    set "PATH=%ProgramFiles%\nodejs;%ProgramFiles(x86)%\nodejs;%LOCALAPPDATA%\Programs\nodejs;%PATH%"
+)
 cd /d "%~dp0frontend"
 
-:: Check if node_modules exists
-if not exist "node_modules" (
-    echo [*] Installing Node.js dependencies (npm install)...
-    call npm.cmd install
-    if errorlevel 1 (
-        echo [!] Error: npm install failed. Please ensure Node.js is installed.
-        pause
-        exit /b 1
-    )
-)
+if exist "node_modules" goto RUN_APP
 
+echo [*] Installing Node.js dependencies...
+call npm install
+if errorlevel 1 goto INSTALL_ERROR
+
+:RUN_APP
 echo.
 echo ===================================================
 echo [+] Frontend web application starting on http://localhost:5173
 echo ===================================================
 echo.
-call npm.cmd run dev
+call npm run dev
+goto END
 
+:INSTALL_ERROR
+echo [!] Error: npm install failed. Please ensure Node.js is installed.
+
+:END
 pause

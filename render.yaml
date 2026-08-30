@@ -1,12 +1,15 @@
 services:
-  # Single Unified Full-Stack Service (React Frontend + FastAPI Backend)
+  # ============================================================================
+  # 1. QuantumCare Backend API Service (Python FastAPI)
+  # ============================================================================
   - type: web
-    name: quantumcare
+    name: quantumcare-backend
     runtime: python
     plan: free
     region: oregon
-    buildCommand: "chmod +x build.sh && ./build.sh"
+    buildCommand: "pip install -r backend/requirements.txt"
     startCommand: "python run.py"
+    healthCheckPath: /health
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.8
@@ -18,3 +21,22 @@ services:
         value: 10000
       - key: SECRET_KEY
         generateValue: true
+      - key: CORS_ORIGINS
+        value: "*"
+
+  # ============================================================================
+  # 2. QuantumCare Frontend Web App (React + Vite Static Site)
+  # ============================================================================
+  - type: static
+    name: quantumcare-frontend
+    plan: free
+    region: oregon
+    buildCommand: "cd frontend && npm install && npm run build"
+    staticPublishPath: ./frontend/dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: "https://quantumcare-backend.onrender.com/api"

@@ -97,9 +97,10 @@ export const ResultPage = () => {
     mimeType: img.mime_type || 'image/jpeg'
   };
 
-  const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
+  const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
+  const backendBase = API_BASE.replace(/\/api\/?$/, '');
   const imageUrl = img.file_path
-    ? `${API_BASE.replace('/api', '')}/uploads/${img.file_path.split(/[\\/]/).pop()}`
+    ? `${backendBase}/uploads/${img.file_path.split(/[\\/]/).pop()}`
     : null;
 
   // Quantum Telemetry Data

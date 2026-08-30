@@ -1,0 +1,23 @@
+name: Render Service Keep-Alive
+
+on:
+  schedule:
+    # Runs every 10 minutes (cron runs in UTC)
+    - cron: "*/10 * * * *"
+  workflow_dispatch: # Allows manual trigger from GitHub UI
+
+jobs:
+  ping-render:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping QuantumCare Render Health Check
+        run: |
+          # Set your Render app URL in GitHub Secrets as RENDER_APP_URL, or replace the default below
+          TARGET_URL="${{ secrets.RENDER_APP_URL || 'https://quantumcare-backend.onrender.com' }}"
+          echo "[*] Pinging $TARGET_URL/ping to keep service awake..."
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$TARGET_URL/ping" || echo "failed")
+          echo "[+] Response Code: $HTTP_STATUS"
+          if [ "$HTTP_STATUS" -ne 200 ]; then
+            echo "[*] Attempting fallback to /health..."
+            curl -s -f "$TARGET_URL/health" || echo "[!] Notice: App might be waking up from cold start"
+          fi

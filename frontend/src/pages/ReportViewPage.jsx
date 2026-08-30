@@ -55,9 +55,10 @@ export const ReportViewPage = () => {
   }
 
   const pred = analysis.prediction;
-  const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
+  const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
+  const backendBase = API_BASE.replace(/\/api\/?$/, '');
   const imageUrl = analysis.image
-    ? `${API_BASE.replace('/api', '')}/uploads/${analysis.image.file_path.split(/[\\/]/).pop()}`
+    ? `${backendBase}/uploads/${analysis.image.file_path.split(/[\\/]/).pop()}`
     : null;
 
   return (

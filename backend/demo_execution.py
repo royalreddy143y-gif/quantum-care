@@ -2,16 +2,19 @@ import json
 import os
 import requests
 
-BASE = "http://127.0.0.1:8000/api"
+BASE = os.environ.get("QUANTUMCARE_API_URL", os.environ.get("API_URL", "http://127.0.0.1:8000/api")).rstrip("/")
+DEMO_EMAIL = os.environ.get("DEMO_USER_EMAIL", "demo@quantumcare.org")
+DEMO_PASSWORD = os.environ.get("DEMO_USER_PASSWORD", "QuantumCare2025!")
 
 print("=" * 60)
 print("  QUANTUMCARE HYBRID QML CLINICAL PLATFORM - LIVE DEMO")
+print(f"  Target API: {BASE}")
 print("=" * 60)
 
 # 1. Authenticate Doctor
 auth_res = requests.post(
     f"{BASE}/auth/login",
-    json={"email": "demo@quantumcare.org", "password": "QuantumCare2025!"}
+    json={"email": DEMO_EMAIL, "password": DEMO_PASSWORD}
 )
 auth_data = auth_res.json()
 token = auth_data["access_token"]
@@ -74,7 +77,7 @@ pdf_size = len(pdf_res.content)
 print(f"\n[5] Vector Clinical PDF Report Generation: COMPLETE")
 print(f"    Status: HTTP {pdf_res.status_code}")
 print(f"    PDF Report Size: {pdf_size} bytes")
-print(f"    Report Endpoint: http://localhost:8000/api/reports/{analysis['id']}/pdf")
+print(f"    Report Endpoint: {BASE}/reports/{analysis['id']}/pdf")
 
 print("\n" + "=" * 60)
 print("  DEMO COMPLETE: All hybrid quantum operations validated successfully!")

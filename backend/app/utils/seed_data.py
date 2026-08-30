@@ -1,3 +1,4 @@
+from app.core.config import settings
 from app.database.session import SessionLocal, engine, Base
 import app.models
 from app.models.user import User
@@ -10,11 +11,13 @@ def seed_demo_data():
     Base.metadata.create_all(bind=engine)
     db = SessionLocal()
     try:
-        demo_user = db.query(User).filter(User.email == "demo@quantumcare.org").first()
+        demo_email = settings.DEMO_USER_EMAIL
+        demo_password = settings.DEMO_USER_PASSWORD
+        demo_user = db.query(User).filter(User.email == demo_email).first()
         if not demo_user:
             demo_user = User(
-                email="demo@quantumcare.org",
-                hashed_password=get_password_hash("QuantumCare2025!"),
+                email=demo_email,
+                hashed_password=get_password_hash(demo_password),
                 full_name="Dr. Eleanor Vance, MD PhD",
                 role="Principal AI Clinician",
                 institution="Quantum Healthcare Discovery Institute",
